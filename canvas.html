@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+<body>
+    <div class="mx-auto d-block mt-5 custom-container" >
+        <div class="form-group">
+            <label for="header">Enter Header:</label>
+            <input type="text" onfocus="this.value=''" id="header" name="header" class="form-control ">
+        </div>
+        <div class="form-group">
+            <label for="footer">Enter footer:</label>
+            <input type="text" onfocus="this.value=''" id="footer" name="footer" class="form-control ">
+        </div>
+        <label for="uploader">Choose file:</label>
+        <input type="file" id="uploader" />
+        
+        <button class="btn btn-primary">Download</button>
+
+    </div>
+   
+    <canvas id="myCanvas" width="300" height="300" class="mx-auto d-block mt-5">
+Your browser does not support the HTML canvas tag.</canvas>
+<script>
+    
+    const c = document.getElementById("myCanvas");
+    const ctx = c.getContext("2d");
+
+    const reader=new FileReader();
+    const img = new Image();
+
+    const uploadImage=(e)=>{
+        reader.onload=() => {
+            img.onload=() => {
+                
+                c.width=img.width
+                c.height=img.height
+                var h=document.getElementById("header").value;
+                var f=document.getElementById("footer").value;
+                ctx.drawImage(img,0,0);
+
+                ctx.font = "30px Arial";
+                ctx.fillStyle="red";
+                ctx.fillText(h, (img.width/3)-17, 40); 
+                ctx.fillText(f,(img.width/2)-17, img.height-17);
+
+            };
+            img.src=reader.result;
+
+        };
+        reader.readAsDataURL(e.target.files[0]);
+    };
+    const imageloader=document.getElementById("uploader");
+    imageloader.addEventListener("change",uploadImage);
+
+    function download(){
+        const image =c.toDataURL();
+        const link =document.createElement('a');
+        link.href =image;
+        link.download ="canvas.png";
+        link.click();
+    }
+    document.querySelector("button").addEventListener("click",download)
+  </script>
+</body>
+
+</html>
+ 
